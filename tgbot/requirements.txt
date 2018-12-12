@@ -1,9 +1,8 @@
 celery
 Django<3
-psycopg2
+psycopg2-binary
 python-telegram-bot
 redis
 requests
 django-mptt
-djangorestframework
 uwsgi

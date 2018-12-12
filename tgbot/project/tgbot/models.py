@@ -5,7 +5,6 @@ from django.db import models
 from django.db.models.functions import Length
 from mptt.models import MPTTModel, TreeForeignKey
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
-
 CANCEL_NAME = "Назад"
 
 
@@ -21,7 +20,7 @@ class BotCommand(MPTTModel):
         (DELETE, "DELETE")
     )
 
-    url = models.URLField(blank=True, null=True)
+    url = models.CharField(max_length=256, blank=True, null=True)
     method = models.PositiveSmallIntegerField(choices=METHOD_CHOICES, default=GET)
     name = models.CharField(max_length=255)
     parent = TreeForeignKey('self', blank=True, null=True, on_delete=models.CASCADE)

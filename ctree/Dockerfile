@@ -9,8 +9,8 @@ RUN apt install -y --no-install-recommends software-properties-common libnewlib-
     && rm -rf /var/lib/apt/lists/* \
     && pip install cryptography
 COPY . /code
-COPY misc/requirements.txt /code/misc/requirements.txt
+COPY requirements.txt /code/requirements.txt
 WORKDIR /code
 RUN pip install cython
-RUN pip install -r /code/misc/requirements.txt
+RUN pip install -r /code/requirements.txt
 RUN ldconfig

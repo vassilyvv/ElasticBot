@@ -14,49 +14,58 @@ services:
       - ./misc/ssl/server.crt:/etc/ssl/certs/server.crt
       - ./misc/ssl/server.key:/etc/ssl/private/server.key
       - ./certs:/root/certs
-      - ./static:/data/django/static
-      - ./media:/data/django/media
+      - ./tgbot/static:/data/django/static
+      - ./tgbot/media:/data/django/media
     command: bash -c "service nginx start && tail -f /dev/null"
     depends_on:
-      - django
-    env_file:
-      - .env
+      - tgbot
+      - ctree
 
-  django:
+  tgbot:
     build:
-      context: .
+      context: tgbot
     command: bash -c "/code/manage.py collectstatic --no-input && python /code/manage.py migrate && /code/run/uwsgi.sh"
     volumes:
-      - ./static:/data/django/static
-      - ./media:/data/django/media
+      - ./tgbot/static:/data/django/static
+      - ./tgbot/media:/data/django/media
     depends_on:
       - db
-      - redis
     env_file:
-      - .env
+      - tgbot/.env
+
+  ctree:
+    build:
+      context: ctree
+    command: bash -c "/code/manage.py collectstatic --no-input && python /code/manage.py migrate && /code/run/uwsgi.sh"
+    volumes:
+      - ./tgbot/static:/data/django/static
+      - ./tgbot/media:/data/django/media
+    depends_on:
+      - db
+    env_file:
+      - ctree/.env
 
   celery:
     build:
-      context: .
+      context: tgbot
     command: bash -c "cd /code && celery -A project worker -B -l info"
     volumes:
-      - ./static:/data/django/static
-      - ./media:/data/django/media
+      - ./tgbot/static:/data/django/static
+      - ./tgbot/media:/data/django/media
     depends_on:
-      - django
+      - tgbot
+      - redis
     env_file:
-      - .env
+      - tgbot/.env
 
   db:
     restart: always
     image: postgres
-    env_file:
-      - .env
     volumes:
       - pgdata:/var/lib/postgresql/data
+      - ./misc/entrypoints/postgres-init.sql:/docker-entrypoint-initdb.d/postgres-init.sql
     ports:
       - 5432:5432
-
   redis:
     restart: always
     image: redis:latest

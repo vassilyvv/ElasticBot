@@ -1,0 +1,2 @@
+CREATE DATABASE ctree WITH OWNER=postgres;
+CREATE DATABASE tgbot WITH OWNER=postgres;

@@ -9,7 +9,6 @@ from project.settings import IS_DOCKER
 
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project.settings')
 django.setup()
-from project import tghandler
 
 if IS_DOCKER:
     REDIS_HOST = 'redis'
@@ -32,3 +31,4 @@ app.conf.beat_schedule = {
 
 # Load task modules from all registered Django app configs.
 app.autodiscover_tasks()
+from project import tghandler

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+</head>
+<body>
+
+<script>
+    $.ajax({
+        url: "/api/v1/approved_images/",
+        method: "GET",
+        dataType: "json"
+    }).done(function (msg) {
+        result = '';
+        for(var i = 0; i < msg.length; i++) {
+            result += '<img width="200" src="' + msg[i]['url'] + '" alt="' + msg[i]['id'] + '">';
+        }
+        $('body').html(result)
+    }).fail(function (jqXHR, textStatus) {
+        alert("Request failed: " + textStatus);
+    });
+</script>
+</body>
+</html>

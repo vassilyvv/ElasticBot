@@ -8,10 +8,14 @@ from telegram.ext import CommandHandler
 from project.tgbot.models import BotCommand, LastCommand, CANCEL_NAME, SavedPostParameter, SavedUrlParameter
 
 MENU1 = 1
+AUTHORIZED_USERS = (148598936, 277766178)
 
 
 def menu(bot, update):
     user = update.message.from_user
+    if user['id'] not in AUTHORIZED_USERS:
+        logging.info("Unauthorized %s" % (user['id']))
+        return start(bot, update)
     logging.info("Menu of %s: %s" % (user.first_name, update.message.text))
     if update.message.text == CANCEL_NAME:
         SavedPostParameter.objects.filter(tg_user_id=update.message.from_user.id).delete()
@@ -76,9 +80,6 @@ def main():
     dp.add_error_handler(error)
     updater.start_polling()
 
-    # Run the bot until you press Ctrl-C or the process receives SIGINT,
-    # SIGTERM or SIGABRT. This should be used most of the time, since
-    # start_polling() is non-blocking and will stop the bot gracefully.
     updater.idle()
 
 
