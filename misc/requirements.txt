@@ -1,0 +1,9 @@
+celery
+Django<3
+psycopg2
+python-telegram-bot
+redis
+requests
+django-mptt
+djangorestframework
+uwsgi
